@@ -1,15 +1,24 @@
 import mongoose from "mongoose";
 
+enum ProductTag {
+  FEATURED = "featured",
+  NEW = "new",
+  SALE = "sale",
+  BESTSELLER = "bestseller",
+  LIMITED = "limited",
+}
+
 interface ProductDocument extends mongoose.Document {
   _id: string;
   name: string;
   shortName: string;
   description: string;
   price: string;
-  color: string;
+  color: string[];
   department: string;
   material: string;
   imageUrl: string;
+  tags: ProductTag[];
 }
 
 const productSchema = new mongoose.Schema<ProductDocument>({
@@ -33,10 +42,12 @@ const productSchema = new mongoose.Schema<ProductDocument>({
     type: String,
     required: true,
   },
-  color: {
-    type: String,
-    required: true, // FORMAT: HSL
-  },
+  color: [
+    {
+      type: String,
+      required: true, // FORMAT: HSL
+    },
+  ],
   department: {
     type: String,
     required: true,
@@ -47,6 +58,12 @@ const productSchema = new mongoose.Schema<ProductDocument>({
   },
   imageUrl: {
     type: String,
+    required: true,
+  },
+  tags: {
+    type: [String],
+    enum: Object.values(ProductTag),
+    default: [ProductTag.NEW],
     required: true,
   },
 });
