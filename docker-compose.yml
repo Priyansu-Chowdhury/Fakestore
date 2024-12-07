@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile-client
+    ports:
+      - "3000:80"
+    restart: always
+    env_file:
+      - client/.env
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    ports:
+      - "5000:5000"
+    restart: always
+    env_file:
+      - server/.env
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: always
+
+volumes:
+  mongodb_data:
